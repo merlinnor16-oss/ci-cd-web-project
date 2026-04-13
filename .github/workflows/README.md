@@ -1,3 +1,4 @@
+![CI Status](https://github.com/merlinnor16-oss/ci-cd-web-project/actions/workflows/ci.yml/badge.svg)
 # CI/CD Web Project
 
 ## 📌 Описание
