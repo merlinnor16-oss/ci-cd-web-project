@@ -1,7 +1,9 @@
-name: CI/CD Pipeline
+name: CI Project
 
 on:
   push:
+    branches: [ main ]
+  pull_request:
     branches: [ main ]
 
 jobs:
@@ -9,32 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Клонирование
-        uses: actions/checkout@v3
+      # Используем 4-ю версию (исправляет Warning про Node.js 20)
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Node.js
-        uses: actions/setup-node@v3
+      # Устанавливаем Node.js (версия 24 — актуальная)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '24'
+          cache: 'npm'
 
-      - name: Установка зависимостей
+      # Устанавливаем зависимости
+      - name: Install dependencies
         run: npm install
 
-      - name: Линтер
+      # Запускаем линтинг
+      - name: Run lint
         run: npm run lint
 
-      - name: Тесты
+      # Запускаем тесты
+      - name: Run tests
         run: npm test
-
-      - name: Сборка
-        run: |
-          mkdir dist
-          cp index.html dist/
-          cp style.css dist/
-          cp script.js dist/
-
-      - name: Деплой
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
