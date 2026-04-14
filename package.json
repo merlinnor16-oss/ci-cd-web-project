@@ -1,0 +1,13 @@
+{
+  "name": "ci-cd-project",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "jest",
+    "build": "mkdir dist && copy index.html dist && copy style.css dist && copy script.js dist"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0"
+  }
+}
