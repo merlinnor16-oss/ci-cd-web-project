@@ -1,35 +1,39 @@
-name: CI Project
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+permissions:
+  contents: write # Это нужно для деплоя
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Используем 4-ю версию (исправляет Warning про Node.js 20)
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Устанавливаем Node.js (версия 24 — актуальная)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
 
-      # Устанавливаем зависимости
       - name: Install dependencies
         run: npm install
 
-    # Запускаем линтинг через npx
       - name: Run lint
         run: npx eslint .
 
-      # Запускаем тесты через npx
       - name: Run tests
         run: npx jest
+
+      # ФИНАЛЬНЫЙ ЭТАП: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ # Публикуем всё содержимое корня
